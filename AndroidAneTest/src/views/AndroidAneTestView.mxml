@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="主页视图"
+		initialize="view1_initializeHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.ls.ane.android.AndroidAne;
+			
+			private var androidAne: AndroidAne;
+			
+			protected function view1_initializeHandler(event:FlexEvent):void
+			{
+				androidAne = new AndroidAne();
+				labelWifiMacAddress.text = androidAne.getWifiMacAddress();
+			}
+			
+			protected function btnToast_clickHandler(event:MouseEvent):void
+			{
+				androidAne.showToast(inputToast.text);
+			}
+			
+			protected function btnDialog_clickHandler(event:MouseEvent):void
+			{
+				androidAne.showDialog(inputTitle.text, inputMessage.text, onClickHandler);
+			}
+			
+			protected function onClickHandler(e: StatusEvent):void
+			{
+				if (e.level == "dialog") {
+					switch (e.code) {
+						case AndroidAne.STATUS_CONFIRM:
+							inputTitle.text = e.level + " " + e.code;
+							break;
+						case AndroidAne.STATUS_CANCEL:
+							inputMessage.text = e.level + " " + e.code;
+							break;
+					}
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<s:Button id="btnToast" x="10" y="10" label="Toast" click="btnToast_clickHandler(event)"/>
+	<s:Button id="btnDialog" x="10" y="104" label="Dialog" click="btnDialog_clickHandler(event)"/>
+	<s:TextInput id="inputToast" x="144" y="10" width="1046" height="76" text="哈哈哈ha"/>
+	<s:TextInput id="inputTitle" x="156" y="104" width="1034" height="76" text="标题"/>
+	<s:TextInput id="inputMessage" x="156" y="188" width="1034" height="76" text="内容"/>
+	<s:Label id="labelWifiMacAddress" x="10" y="264" width="1000" height="76"/>
+	
+</s:View>
